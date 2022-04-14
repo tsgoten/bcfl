@@ -1,5 +1,5 @@
 from client import CifarClient, NUM_CLIENTS, Net
-NUM_EPOCHS = 3
+NUM_EPOCHS = 300
 clients = []
 
 global_client = CifarClient(-1)
@@ -31,6 +31,6 @@ def aggregate_local_clients():
 initialize_clients(NUM_CLIENTS)
 for epoch in range(NUM_EPOCHS):
 	print("******** Epoch: {}".format(epoch))
-	aggregate_local_clients()
 	evaluate_local_clients()
 	train_local_clients()
+	aggregate_local_clients()
