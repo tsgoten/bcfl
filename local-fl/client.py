@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from pickle import TRUE
 
 import torch
 import torch.nn as nn
@@ -6,6 +7,7 @@ import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
+import pandas as pd
 import numpy as np
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -15,11 +17,13 @@ class ShuffleDataset(torch.utils.data.Dataset):
         super().__init__()
         self.orig_dataset = dataset
         self.shuffled_idxes = np.random.permutation(len(dataset))
+        self.data = self.orig_dataset.data
     
     def __getitem__(self, i):
         return self.orig_dataset[self.shuffled_idxes[i]]
     def __len__(self):
         return len(self.orig_dataset)
+
 
 class SliceDataset(torch.utils.data.Dataset):
     def __init__(self, dataset, start, end):
@@ -36,13 +40,20 @@ class SliceDataset(torch.utils.data.Dataset):
     def __len__(self):
         return self.end - self.start
 
-def load_data(num_clients):
+    def to_csv(self, fname):
+        data = self.orig_dataset.data
+        data = data.reshape([data.shape[0], -1])
+        data = pd.DataFrame(data=data, index=None, columns=None)
+        data.to_csv(fname)
+
+def load_data(num_clients, bag=True):
     """Load CIFAR-10 (training and test set)."""
     transform = transforms.Compose(
     [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     )
     
     trainset = CIFAR10(".", train=True, download=True, transform=transform)
+
     trainset = ShuffleDataset(trainset)
     testset = CIFAR10(".", train=False, download=True, transform=transform)
     testset = ShuffleDataset(testset)
@@ -55,6 +66,10 @@ def load_data(num_clients):
     for i in range(num_clients):
         train_subset = SliceDataset(trainset, i * train_len, (i+1) * train_len)
         test_subset = SliceDataset(testset, i * test_len, (i+1) * test_len)
+        if bag:
+            trainset = ShuffleDataset(trainset)
+            testset = ShuffleDataset(testset)
+        train_subset.to_csv("cifar10_train"+str(i)+".csv")
         trainloaders.append(DataLoader(train_subset, batch_size=32, shuffle=True))
         testloaders.append(DataLoader(test_subset, batch_size=32))
         num_examples.append({"trainset" : len(train_subset), "testset" : len(test_subset)})
