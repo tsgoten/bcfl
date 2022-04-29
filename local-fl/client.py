@@ -21,6 +21,21 @@ class ShuffleDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.orig_dataset)
 
+class SliceDataset(torch.utils.data.Dataset):
+    def __init__(self, dataset, start, end):
+        super().__init__()
+        self.orig_dataset = dataset
+        self.start = start
+        self.end = end
+
+    def __getitem__(self, i):
+        if i >= self.end:
+            raise IndexError('list index out of range')
+        return self.orig_dataset[i + self.start]
+
+    def __len__(self):
+        return self.end - self.start
+
 def load_data(num_clients):
     """Load CIFAR-10 (training and test set)."""
     transform = transforms.Compose(
@@ -38,11 +53,11 @@ def load_data(num_clients):
     num_examples = []
          
     for i in range(num_clients):
-        train_subset = trainset[i * train_len: (i+1) * train_len]
-        test_subset = testset[i * test_len: (i+1) * test_len]
-        trainloaders[i] = DataLoader(trainset[i * train_len: (i+1) * train_len], batch_size=32, shuffle=True)
-        testloaders[i] = DataLoader(testset[i * test_len: (i+1) * test_len], batch_size=32)
-        num_examples[i] = {"trainset" : len(train_subset), "testset" : len(test_subset)}
+        train_subset = SliceDataset(trainset, i * train_len, (i+1) * train_len)
+        test_subset = SliceDataset(testset, i * test_len, (i+1) * test_len)
+        trainloaders.append(DataLoader(train_subset, batch_size=32, shuffle=True))
+        testloaders.append(DataLoader(test_subset, batch_size=32))
+        num_examples.append({"trainset" : len(train_subset), "testset" : len(test_subset)})
         
     #num_examples = {"trainset" : len(trainset), "testset" : len(testset)}
     return trainloaders, testloaders, num_examples
@@ -95,7 +110,7 @@ class Net(nn.Module):
         return x
 
 # Load model and data
-net = Net().to(DEVICE)
+# net = Net().to(DEVICE)
 trainloaders, testloaders, num_examples = load_data(NUM_CLIENTS)
 
 
@@ -103,22 +118,23 @@ class CifarClient():
 
     def __init__(self, client_id):
         self.client_id = client_id
+        self.net = Net().to(DEVICE)
 
     def get_parameters(self):
-        return [val.cpu().numpy() for _, val in net.state_dict().items()]
+        return [val.cpu().numpy() for _, val in self.net.state_dict().items()]
 
     def set_parameters(self, parameters):
-        params_dict = zip(net.state_dict().keys(), parameters)
+        params_dict = zip(self.net.state_dict().keys(), parameters)
         state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
-        net.load_state_dict(state_dict, strict=True)
+        self.net.load_state_dict(state_dict, strict=True)
 
-    def fit(self, parameters, config):
+    def fit(self, parameters, config=[]):
         self.set_parameters(parameters)
-        train(net, trainloaders[self.client_id], epochs=1)
+        train(self.net, trainloaders[self.client_id], epochs=10)
         return self.get_parameters(), num_examples[self.client_id]["trainset"], {}
 
-    def evaluate(self, parameters, config):
+    def evaluate(self, parameters, config=[]):
         self.set_parameters(parameters)
-        loss, accuracy = test(net, testloaders[self.client_id])
-        return float(loss), num_examples["testset"], {"accuracy": float(accuracy)}
+        loss, accuracy = test(self.net, testloaders[self.client_id])
+        return float(loss), num_examples[self.client_id]["testset"], {"accuracy": float(accuracy)}
 
