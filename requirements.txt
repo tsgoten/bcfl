@@ -1,3 +1,2 @@
 torch==1.9.1+cpu
 torchvision==0.10.1+cpu
-flwr==0.18.0
