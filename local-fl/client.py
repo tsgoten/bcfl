@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from pickle import TRUE
 
 import torch
 import torch.nn as nn
@@ -7,21 +6,21 @@ import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
-import pandas as pd
 import numpy as np
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 NUM_CLIENTS = 10
+
+
 class ShuffleDataset(torch.utils.data.Dataset):
     def __init__(self, dataset):
         super().__init__()
         self.orig_dataset = dataset
         self.shuffled_idxes = np.random.permutation(len(dataset))
-        self.data = self.orig_dataset.data
-        self.targets = self.orig_dataset.targets
-    
+
     def __getitem__(self, i):
         return self.orig_dataset[self.shuffled_idxes[i]]
+
     def __len__(self):
         return len(self.orig_dataset)
 
@@ -30,8 +29,6 @@ class SliceDataset(torch.utils.data.Dataset):
     def __init__(self, dataset, start, end):
         super().__init__()
         self.orig_dataset = dataset
-        self.data = self.orig_dataset.data
-        self.targets = self.orig_dataset.targets
         self.start = start
         self.end = end
 
@@ -43,45 +40,36 @@ class SliceDataset(torch.utils.data.Dataset):
     def __len__(self):
         return self.end - self.start
 
-    def to_csv(self, fname):
-        data = self.orig_dataset.data
-        data = data.reshape([data.shape[0], -1])
-        targets = np.array(self.orig_dataset.targets).reshape([-1, 1])
-        data = np.concatenate([data, targets], axis=1)
-        data = pd.DataFrame(data=data, index=None, columns=None)
-        data.to_csv(fname)
 
-def load_data(num_clients, bag=True, seed=None):
+def load_data(num_clients):
     """Load CIFAR-10 (training and test set)."""
     transform = transforms.Compose(
-    [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+        [transforms.ToTensor(), transforms.Normalize(
+            (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     )
-    np.random.seed(seed) 
-    trainset = CIFAR10(".", train=True, download=True, transform=transform)
 
-    orig_trainset = ShuffleDataset(trainset)
-    trainset = orig_trainset
+    trainset = CIFAR10(".", train=True, download=True, transform=transform)
+    trainset = ShuffleDataset(trainset)
     testset = CIFAR10(".", train=False, download=True, transform=transform)
-    orig_testset = ShuffleDataset(testset)
-    testset = orig_testset
+    testset = ShuffleDataset(testset)
     train_len = len(trainset) // num_clients
     test_len = len(testset) // num_clients
     trainloaders = []
     testloaders = []
     num_examples = []
-         
+
     for i in range(num_clients):
         train_subset = SliceDataset(trainset, i * train_len, (i+1) * train_len)
         test_subset = SliceDataset(testset, i * test_len, (i+1) * test_len)
-        train_subset.to_csv("cifar10_train"+str(i)+".csv")
-        trainloaders.append(DataLoader(train_subset, batch_size=32, shuffle=True))
+        trainloaders.append(DataLoader(
+            train_subset, batch_size=32, shuffle=True))
         testloaders.append(DataLoader(test_subset, batch_size=32))
-        num_examples.append({"trainset" : len(train_subset), "testset" : len(test_subset)})
-        if bag:
-            trainset = ShuffleDataset(orig_trainset)
-            testset = ShuffleDataset(orig_testset)
-        
+        num_examples.append(
+            {"trainset": len(train_subset), "testset": len(test_subset)})
+
+    #num_examples = {"trainset" : len(trainset), "testset" : len(testset)}
     return trainloaders, testloaders, num_examples
+
 
 def train(net, trainloader, epochs):
     """Train the network on the training set."""
@@ -94,6 +82,7 @@ def train(net, trainloader, epochs):
             loss = criterion(net(images), labels)
             loss.backward()
             optimizer.step()
+
 
 def test(net, testloader):
     """Validate the network on the entire test set."""
@@ -130,9 +119,10 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
 
+
 # Load model and data
 # net = Net().to(DEVICE)
-trainloaders, testloaders, num_examples = load_data(NUM_CLIENTS, bag=True, seed=42)
+trainloaders, testloaders, num_examples = load_data(NUM_CLIENTS)
 
 
 class CifarClient():
@@ -151,11 +141,10 @@ class CifarClient():
 
     def fit(self, parameters, config=[]):
         self.set_parameters(parameters)
-        train(self.net, trainloaders[self.client_id], epochs=10)
+        train(self.net, trainloaders[self.client_id], epochs=1)
         return self.get_parameters(), num_examples[self.client_id]["trainset"], {}
 
     def evaluate(self, parameters, config=[]):
         self.set_parameters(parameters)
         loss, accuracy = test(self.net, testloaders[self.client_id])
         return float(loss), num_examples[self.client_id]["testset"], {"accuracy": float(accuracy)}
-
