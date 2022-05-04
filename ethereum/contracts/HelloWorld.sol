@@ -2,7 +2,6 @@
 // Learn more: https://solidity.readthedocs.io/en/v0.5.10/layout-of-source-files.html#pragma
 pragma solidity ^0.7.0;
 
-
 import “stringUtils.sol”;
 
 // Defines a contract named `HelloWorld`.
