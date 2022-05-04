@@ -141,7 +141,7 @@ class CifarClient():
 
     def fit(self, parameters, config=[]):
         self.set_parameters(parameters)
-        train(self.net, trainloaders[self.client_id], epochs=10)
+        train(self.net, trainloaders[self.client_id], epochs=1)
         return self.get_parameters(), num_examples[self.client_id]["trainset"], {}
 
     def evaluate(self, parameters, config=[]):
