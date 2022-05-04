@@ -5,6 +5,9 @@ ethereum/node_modules/
 ethereum/.env
 __pycache__
 .vscode
+.DS_STORE
+
+
 oasis/node_modules/.package-lock.json
 oasis/node_modules/@mattiasbuelens/web-streams-adapter/LICENSE.md
 oasis/node_modules/@mattiasbuelens/web-streams-adapter/package.json
