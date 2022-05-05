@@ -22,7 +22,7 @@
     },
     paths: {
       sources: "./contracts",
-      tests: "./test",
+      tests: "./tests",
       cache: "./cache",
       artifacts: "./artifacts"
    },
