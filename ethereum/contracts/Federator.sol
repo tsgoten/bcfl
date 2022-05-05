@@ -2,6 +2,7 @@ pragma solidity ^0.4.0;
 
 contract Federator {
     uint16 constant MAX_BATCH_SIZE = 10;
+    uint32 constant float_multiplier = 1e32;
 
     // data structure for global model parameters
     int256[] public global_model_parameters;
@@ -11,17 +12,15 @@ contract Federator {
     uint16 public batch_size;
     uint16 batch_number;
 
-
-    
-
     // two models - running and master 
-    constructor initialize_model(int256[] memory model_parameters) public {
+    constructor initialize_model(int256[] memory model_parameters, int256[] model_structure) public {
         global_model_parameters = model_parameters;
         running_model_parameters = model_parameters;
-        dimensions = new int256[](model_parameters.length);
-        for (uint16 i = 0; i < model_parameters.length; i++) {
-            dimensions[i] = model_parameters[i];
+        dimensions = new int256[](model_structure.length);
+        for (uint16 i = 0; i < model_structure.length; i++) {
+            dimensions[i] = model_structure[i];
         }
+        model_structure = model_structure
         batch_size = 0;
         batch_number = 0;
     }
