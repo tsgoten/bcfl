@@ -1,4 +1,5 @@
 # Deployment Script for local ganache network
+# Only works with solc verion 0.4.25 
 
 from web3 import Web3
 from solc import compile_files
