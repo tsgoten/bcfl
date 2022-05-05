@@ -12,9 +12,10 @@ contract Federator {
     uint16 batch_number;
 
 
+    
 
     // two models - running and master 
-    function initialize_model(int256[] memory model_parameters) public {
+    constructor initialize_model(int256[] memory model_parameters) public {
         global_model_parameters = model_parameters;
         running_model_parameters = model_parameters;
         dimensions = new int256[](model_parameters.length);
