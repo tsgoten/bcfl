@@ -1,3 +1,5 @@
+# Testing script for local ganache network
+
 from web3 import Web3
 from solc import compile_files
 

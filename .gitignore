@@ -521,3 +521,4 @@ oasis/node_modules/web-streams-polyfill/es6/package.json
 oasis/node_modules/web-streams-polyfill/ponyfill/package.json
 oasis/node_modules/web-streams-polyfill/ponyfill/es2018/package.json
 oasis/node_modules/web-streams-polyfill/ponyfill/es6/package.json
+ethereum/cache/solidity-files-cache.json

@@ -1,12 +1,12 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/azicon/Dropbox/Projects/decentralized-federated-learning/ethereum/contracts/HelloWorld.sol": {
-      "lastModificationDate": 1649756585725,
-      "contentHash": "d6c706cc9f5e4fb55bad2956673b293b",
-      "sourceName": "contracts/HelloWorld.sol",
+    "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/Federator.sol": {
+      "lastModificationDate": 1651791116383,
+      "contentHash": "0286dba292b0b5e126ab3075367f5ff5",
+      "sourceName": "contracts/Federator.sol",
       "solcConfig": {
-        "version": "0.7.3",
+        "version": "0.8.13",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -30,7 +30,42 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.7.0"
+        "0.8.13"
+      ],
+      "artifacts": [
+        "Federator"
+      ]
+    },
+    "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/HelloWorld.sol": {
+      "lastModificationDate": 1651790796603,
+      "contentHash": "7c15715036a51e72c7f9bdaaa9d319c6",
+      "sourceName": "contracts/HelloWorld.sol",
+      "solcConfig": {
+        "version": "0.8.13",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.13"
       ],
       "artifacts": [
         "HelloWorld"
