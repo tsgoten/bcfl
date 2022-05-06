@@ -1,9 +1,5 @@
-import flwr as fl
-
 from flask import Flask, g
 import sqlite3
-
-fl.server.start_server(config={"num_rounds": 3})
 
 app = Flask(__name__)
 
