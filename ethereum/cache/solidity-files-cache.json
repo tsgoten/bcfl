@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/Federator.sol": {
-      "lastModificationDate": 1651802815803,
-      "contentHash": "147a6e0216a8a1e8f73de2eedd855e32",
+      "lastModificationDate": 1651814233723,
+      "contentHash": "9badf9a57939a8e8ddb46eeb55608cfb",
       "sourceName": "contracts/Federator.sol",
       "solcConfig": {
         "version": "0.8.13",

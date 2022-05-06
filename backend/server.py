@@ -15,14 +15,6 @@ def init_db():
         db.commit()
 
 def seed_db():
-    with app.app_context():
-        db = get_db()
-        db.execute("INSERT INTO output (parameter, timestamp, co2_ppm) VALUES (?, ?, ?)", ("ss", "1635416378000", "100"))
-        db.execute("INSERT INTO output (parameter, timestamp, co2_ppm) VALUES (?, ?, ?)", ("g", "1635416378000", "200"))
-        db.execute("INSERT INTO output (parameter, timestamp, co2_ppm) VALUES (?, ?, ?)", ("ssrt", "1635416378000", "300"))
-        db.execute("INSERT INTO output (parameter, timestamp, co2_ppm) VALUES (?, ?, ?)", ("grt", "1635416378000", "400"))
-
-        db.commit()
 
 def get_db():
     db = getattr(g, '_database', None)

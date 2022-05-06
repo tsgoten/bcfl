@@ -2,11 +2,10 @@ pragma solidity 0.8.13;
 
 contract Federator {
     int256 public max_batch_size;
-    uint256 constant float_multiplier = 1e32;
 
     // data structure for global model parameters
     int256[] public global_model_parameters;
-    int256[] public running_model_parameters;
+    int256[] running_model_parameters;
 
     uint256[] public dimensions;
     int256 public batch_size;
@@ -16,11 +15,11 @@ contract Federator {
     constructor(
         uint256[] memory model_structure,
         int256[] memory model_parameters,
-        int256 memory max_batch_size
+        int256 max_batch_size_
     ) public {
         global_model_parameters = model_parameters;
         running_model_parameters = model_parameters;
-        max_batch_size = max_batch_size;
+        max_batch_size = max_batch_size_;
         dimensions = new uint256[](model_structure.length);
         uint256 model_length_total = 0;
         for (uint16 i = 0; i < model_structure.length; i++) {
@@ -34,7 +33,7 @@ contract Federator {
     }
 
     // updates existing federated learning model with new data
-    function update_model(int256[] calldata new_model_parameters) public {
+    function update(int256[] calldata new_model_parameters) public {
         if (batch_size == max_batch_size) {
             global_model_parameters = running_model_parameters;
             batch_size = 1;
