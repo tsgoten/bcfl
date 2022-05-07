@@ -2,7 +2,7 @@
 [01;1mBrainome Table Compiler v1.8-120-prod[0m
 Copyright (c) 2019-2022 Brainome, Inc. All Rights Reserved.
 Licensed to:                 Austin Jang  (Evaluation)
-Expiration Date:             2022-07-31   87 days left
+Expiration Date:             2022-07-31   86 days left
 Maximum File Size:           30 GB
 Maximum Instances:           unlimited
 Maximum Attributes:          unlimited
@@ -12,7 +12,7 @@ Connected to:                daimensions.brainome.ai  (local execution)
 [01;1mCommand:[0m
     btc data/cifar10_train9.csv -measureonly
 
-Start Time:                 05/05/2022, 01:02 PDT
+Start Time:                 05/06/2022, 23:24 PDT
 
 Cleaning...Splitting into training and validation...Pre-training measurements...
 
@@ -20,44 +20,44 @@ Cleaning...Splitting into training and validation...Pre-training measurements...
 Data:
     Input:                      data/cifar10_train9.csv
     Target Column:              3072
-    Number of instances:      50000
+    Number of instances:       5000
     Number of attributes:      3073 out of 3073
     Number of classes:           10
 
 Class Balance:                
-                               6: 10.00%
-                               9: 10.00%
-                               4: 10.00%
-                               1: 10.00%
-                               2: 10.00%
-                               7: 10.00%
-                               8: 10.00%
-                               3: 10.00%
-                               5: 10.00%
-                               0: 10.00%
+                               7: 9.70%
+                               1: 9.76%
+                               4: 9.50%
+                               0: 9.86%
+                               2: 9.58%
+                               5: 10.58%
+                               9: 10.24%
+                               6: 9.76%
+                               3: 10.38%
+                               8: 10.64%
 
 Learnability:
-    Best guess accuracy:          10.00%
-    Data Sufficiency:             Maybe enough data to generalize. [yellow]
+    Best guess accuracy:          10.64%
+    Data Sufficiency:             Not enough data to generalize. [red]
 
 Capacity Progression:             at [ 5%, 10%, 20%, 40%, 80%, 100% ]
-    Ideal Machine Learner:             13,  14,  15,  15,  16,  16
+    Ideal Machine Learner:              9,  10,  11,  12,  12,  13
 
 
 Expected Accuracy:              Training            Validation
-    Decision Tree:                93.92%                11.31%
+    Decision Tree:                99.26%                11.74%
     Neural Network:                 ----                  ----
-    Random Forest:               100.00%                44.64%
+    Random Forest:               100.00%                38.15%
 Recommendations:
     We recommend using Random Forest -f RF.
     If predictor accuracy is insufficient, try using the effort option -e with a value of 5 or more to increase training time. 
 
 Time to Build Estimates:
-    Decision Tree:                less than a minute
+    Decision Tree:                a few seconds
 
 
 
 
-End Time:           05/05/2022, 01:07 PDT
-Runtime Duration:   5m 18s
+End Time:           05/06/2022, 23:24 PDT
+Runtime Duration:   35s
 

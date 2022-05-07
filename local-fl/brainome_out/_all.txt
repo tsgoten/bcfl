@@ -10,54 +10,54 @@ Maximum Classes:             unlimited
 Connected to:                daimensions.brainome.ai  (local execution)
 
 [01;1mCommand:[0m
-    btc data/cifar10_train8.csv -measureonly
+    btc data/cifar10_train_all.csv -measureonly
 
-Start Time:                 05/06/2022, 23:23 PDT
+Start Time:                 05/06/2022, 23:24 PDT
 
 Cleaning...Splitting into training and validation...Pre-training measurements...
 
 [01;1mPre-training Measurements[0m
 Data:
-    Input:                      data/cifar10_train8.csv
+    Input:                      data/cifar10_train_all.csv
     Target Column:              3072
-    Number of instances:       5000
+    Number of instances:      50000
     Number of attributes:      3073 out of 3073
     Number of classes:           10
 
 Class Balance:                
-                               1: 10.52%
-                               8: 9.42%
-                               5: 9.92%
-                               7: 9.84%
-                               4: 10.44%
-                               3: 9.94%
-                               2: 9.46%
-                               0: 10.42%
-                               9: 10.20%
-                               6: 9.84%
+                               6: 10.00%
+                               9: 10.00%
+                               4: 10.00%
+                               1: 10.00%
+                               2: 10.00%
+                               7: 10.00%
+                               8: 10.00%
+                               3: 10.00%
+                               5: 10.00%
+                               0: 10.00%
 
 Learnability:
-    Best guess accuracy:          10.52%
-    Data Sufficiency:             Not enough data to generalize. [red]
+    Best guess accuracy:          10.00%
+    Data Sufficiency:             Maybe enough data to generalize. [yellow]
 
 Capacity Progression:             at [ 5%, 10%, 20%, 40%, 80%, 100% ]
-    Ideal Machine Learner:              9,  10,  11,  12,  12,  13
+    Ideal Machine Learner:             13,  14,  15,  15,  16,  16
 
 
 Expected Accuracy:              Training            Validation
-    Decision Tree:                99.34%                11.12%
+    Decision Tree:                93.92%                11.31%
     Neural Network:                 ----                  ----
-    Random Forest:               100.00%                38.33%
+    Random Forest:               100.00%                44.64%
 Recommendations:
     We recommend using Random Forest -f RF.
     If predictor accuracy is insufficient, try using the effort option -e with a value of 5 or more to increase training time. 
 
 Time to Build Estimates:
-    Decision Tree:                a few seconds
+    Decision Tree:                less than a minute
 
 
 
 
-End Time:           05/06/2022, 23:24 PDT
-Runtime Duration:   36s
+End Time:           05/06/2022, 23:29 PDT
+Runtime Duration:   5m 16s
 

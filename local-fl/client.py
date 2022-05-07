@@ -44,9 +44,9 @@ class SliceDataset(torch.utils.data.Dataset):
         return self.end - self.start
 
     def to_csv(self, fname):
-        data = self.orig_dataset.data
+        data = self.orig_dataset.data[self.start:self.end]
         data = data.reshape([data.shape[0], -1])
-        targets = np.array(self.orig_dataset.targets).reshape([-1, 1])
+        targets = np.array(self.orig_dataset.targets[self.start:self.end]).reshape([-1, 1])
         data = np.concatenate([data, targets], axis=1)
         data = pd.DataFrame(data=data, index=None, columns=None)
         data.to_csv(fname)
