@@ -7,6 +7,10 @@ const to_fixed_number = (number) => {
     return ethers.BigNumber.from(number).mul(float_multiplier);
 }
 
+const to_float_number = (number) => {
+    return number.div(float_multiplier).toNumber();
+}
+
 // factory to create array of the same number of length according to the structure
 const same_parameters_factory = (structure, number) => {
     let length = 0;
@@ -16,47 +20,23 @@ const same_parameters_factory = (structure, number) => {
     return new Array(length).fill(to_fixed_number(number));
 }
 
-const same_parameters_factory_fixedNum = (structure, number) => {
-    let length = 0;
-    for (const item of structure) {
-        length += item;
-    }
-    return new Array(length).fill(ethers.FixedNumber.from(number));
-}
-
 // simulate the expected aggregation and return the expected result
 const expected_aggregated_model = (structure, numbers, current_batch_size, max_batch_size = 10) => {
-    let aggregated_value = 0.;
+    let aggregated_value = ethers.BigNumber.from(0);
     let length = 0;
     for (const item of structure) {
         length += item;
     }
-    let curr = current_batch_size;
-    numbers.forEach((num) => {
-        if (curr == max_batch_size) {
-            curr = 1;
-        }
-        aggregated_value = (aggregated_value * curr + num) / (curr + 1);
-        curr++;
-    });
-    return new Array(length).fill(ethers.FixedNumber(aggregated_value));
-}
 
-const expected_aggregated_model_fixedNum = (structure, numbers, current_batch_size, max_batch_size = 10) => {
-    let aggregated_value = 0.;
-    let length = 0;
-    for (const item of structure) {
-        length += item;
-    }
     let curr = current_batch_size;
     numbers.forEach((num) => {
         if (curr == max_batch_size) {
             curr = 1;
         }
-        aggregated_value = (aggregated_value * curr + num) / (curr + 1);
+        aggregated_value = aggregated_value.mul(curr).add(to_fixed_number(num)).div(curr + 1);
         curr++;
     });
-    return new Array(length).fill(ethers.FixedNumber(aggregated_value));
+    return new Array(length).fill(aggregated_value);
 }
 
 async function deploy_federator(structure, init_model_parameters, max_batch_size = 10) {
@@ -93,19 +73,24 @@ describe("Aggregation", function () {
         expect(await federator.get_weights()).to.eql(same_parameters_factory(model_structure, 1.));
     });
 
-    // it("Should average repeated updates under limit", async function () {
-    //     const model_parameters = same_parameters_factory(model_structure, 1.);
-    //     const federator = await deploy_federator(model_structure, model_parameters);
-    //     const weights_to_update = [1., 2.];
-    //     for (const weight of weights_to_update) {
-    //         const parameters = same_parameters_factory(model_structure, weight);
-    //         await federator.update(parameters);
-    //     }
+    it("Should average repeated updates under limit", async function () {
+        const model_parameters = same_parameters_factory(model_structure, 1.);
+        const federator = await deploy_federator(model_structure, model_parameters);
+        const weights_to_update = [2., 3.];
+        weights_to_update.forEach(async (weight) => {
+            const parameters = same_parameters_factory(model_structure, weight);
+            await federator.update(parameters);
+        });
 
-    //     expect((await federator.get_running_weights()).map((x) => {
-    //         return parseFloat(x);
-    //     })).to.eql(expected_aggregated_model(model_structure, weights_to_update, 0));    
+        expected_parameters = expected_aggregated_model([1.].concat(model_structure), weights_to_update, 0);
+        console.log(expected_parameters.map((x) => {
+            return to_float_number(x);
+        }));
+        console.log((await federator.get_running_weights()).map((x) => {
+            return to_float_number(x);
+        }));
+        expect(await federator.get_running_weights()).to.eql(expected_parameters);    
     
-    // });
+    });
 
 });
