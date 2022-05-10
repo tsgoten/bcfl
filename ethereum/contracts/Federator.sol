@@ -47,7 +47,7 @@ contract Federator {
             global_model_parameters = running_model_parameters;
             batch_size = 1;
             batch_number = batch_number + 1;
-            console.log("I am here");
+            //console.log("I am here");
         }
         for (uint128 i = 0; i < new_model_parameters.length; i++) {
             running_model_parameters[i] = math.div(
@@ -57,9 +57,8 @@ contract Federator {
                 ),
                 math.fromInt(batch_size + 1)
             );
-            console.logInt(running_model_parameters[i]);
+            //console.logInt(running_model_parameters[i]);
         }
-        console.log("-----------------------------------------------------");
         batch_size = batch_size + 1;
     }
 

@@ -86,24 +86,24 @@ describe("Aggregation", function () {
     });
 
 
-    // it("Should average repeated updates under limit", async function () {
-    //     const model_parameters = same_parameters_factory(model_structure, 1);
-    //     const federator = await deploy_federator(model_structure, model_parameters);
-    //     const weights_to_update = [2, 3];
-    //     weights_to_update.forEach(async (weight) => {
-    //         const parameters = same_parameters_factory(model_structure, weight);
-    //         await federator.update(parameters);
-    //     });
+    it("Should average repeated updates under limit", async function () {
+        const model_parameters = same_parameters_factory(model_structure, 1);
+        const federator = await deploy_federator(model_structure, model_parameters);
+        const weights_to_update = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+        weights_to_update.forEach(async (weight) => {
+            const parameters = same_parameters_factory(model_structure, weight);
+            await federator.update(parameters);
+        });
 
-    //     expected_parameters = expected_aggregated_model(model_structure, 1, weights_to_update, 1);
-    //     console.log(expected_parameters.map((x) => {
-    //         return to_float_number(x);
-    //     }));
-    //     console.log((await federator.get_running_weights()).map((x) => {
-    //         return to_float_number(x);
-    //     }));
-    //     expect(await federator.get_running_weights()).to.eql(expected_parameters);    
+        expected_parameters = expected_aggregated_model(model_structure, 1, weights_to_update, 1);
+        console.log(expected_parameters.map((x) => {
+            return to_float_number(x);
+        }));
+        console.log((await federator.get_running_weights()).map((x) => {
+            return to_float_number(x);
+        }));
+        expect(await federator.get_running_weights()).to.eql(expected_parameters);    
     
-    // });
+    });
 
 });
