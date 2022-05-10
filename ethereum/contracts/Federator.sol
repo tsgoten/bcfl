@@ -1,10 +1,14 @@
 pragma solidity 0.8.13;
 
+import "../node_modules/hardhat/console.sol";
+import "./ABDKMath.sol";
+
+
 contract Federator {
     int256 public max_batch_size;
 
     // data structure for global model parameters
-    int256[] public global_model_parameters;
+    int256[] global_model_parameters;
     int256[] running_model_parameters;
 
     uint256[] public dimensions;
@@ -17,6 +21,7 @@ contract Federator {
         int256[] memory model_parameters,
         int256 max_batch_size_
     ) public {
+        console.log 
         global_model_parameters = model_parameters;
         running_model_parameters = model_parameters;
         max_batch_size = max_batch_size_;
@@ -38,6 +43,7 @@ contract Federator {
             global_model_parameters = running_model_parameters;
             batch_size = 1;
             batch_number = batch_number + 1;
+            console.log("I am here");
         }
         for (uint256 i = 0; i < new_model_parameters.length; i++) {
             running_model_parameters[i] =
@@ -45,11 +51,24 @@ contract Federator {
                     running_model_parameters[i] *
                     batch_size) /
                 (batch_size + 1);
+            console.logInt(batch_size);
+            console.logInt(running_model_parameters[i]);
         }
+        console.log("-----------------------------------------------------");
         batch_size = batch_size + 1;
     }
+
+    function write_running_parameters(int256[] memory weights) private {
+        running_model_parameters = weights;
+
+    } 
 
     function get_weights() public view returns (int256[] memory weights) {
         return global_model_parameters;
     }
+
+    function get_running_weights() public view returns (int256[] memory weights) {
+        return running_model_parameters;
+    }
 }
+
