@@ -36,10 +36,8 @@ contract Federator {
             global_model_parameters[i] = model_parameters[i];
             running_model_parameters[i] = model_parameters[i];
         }
-        console.logInt(global_model_parameters[0]);
-
         model_structure = model_structure;
-        batch_size = 0;
+        batch_size = 1;
         batch_number = 0;
     }
 
@@ -55,7 +53,7 @@ contract Federator {
             running_model_parameters[i] = math.div(
                 math.add(
                     new_model_parameters[i],
-                    math.mul(running_model_parameters[i], batch_size)
+                    math.mul(running_model_parameters[i], math.fromInt(batch_size))
                 ),
                 math.fromInt(batch_size + 1)
             );
