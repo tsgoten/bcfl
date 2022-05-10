@@ -90,9 +90,7 @@ describe("Aggregation", function () {
         const new_model_parameters = same_parameters_factory(model_structure, 2.);
         await federator.update(new_model_parameters);
 
-        expect((await federator.get_weights()).map((x) => {
-            x;
-        })).to.eql(same_parameters_factory(model_structure, 1.));
+        expect(await federator.get_weights()).to.eql(same_parameters_factory(model_structure, 1.));
     });
 
     // it("Should average repeated updates under limit", async function () {
