@@ -1,6 +1,8 @@
 pragma solidity 0.8.13;
 
 import "../node_modules/hardhat/console.sol";
+import "./ABDKMath.sol";
+
 
 contract Federator {
     int256 public max_batch_size;
@@ -19,6 +21,7 @@ contract Federator {
         int256[] memory model_parameters,
         int256 max_batch_size_
     ) public {
+        console.log 
         global_model_parameters = model_parameters;
         running_model_parameters = model_parameters;
         max_batch_size = max_batch_size_;
