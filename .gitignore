@@ -5,7 +5,7 @@ ethereum/node_modules/
 ethereum/.env
 __pycache__
 .vscode
-.DS_STORE
+.DS_Stor
 
 
 oasis/node_modules/.package-lock.json
