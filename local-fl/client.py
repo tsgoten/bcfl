@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-NUM_CLIENTS = 10
+NUM_CLIENTS = 3
 class ShuffleDataset(torch.utils.data.Dataset):
     def __init__(self, dataset):
         super().__init__()
