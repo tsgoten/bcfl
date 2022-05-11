@@ -2,3 +2,5 @@
 *.gz
 cifar-10-batches-py/
 .vscode
+*.csv
+*.pyc

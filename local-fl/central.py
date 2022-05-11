@@ -1,4 +1,7 @@
 from client import CifarClient, NUM_CLIENTS, Net
+import random
+import torch
+
 NUM_EPOCHS = 300
 clients = []
 
@@ -34,3 +37,6 @@ for epoch in range(NUM_EPOCHS):
 	evaluate_local_clients()
 	train_local_clients()
 	aggregate_local_clients()
+	if epoch % 30 == 0:
+		torch.save(global_client.net.state_dict(), "./models/global_dict_{}.pth".format(epoch))
+		torch.save(global_client.net, "./models/global_model_{}.pth".format(epoch))
