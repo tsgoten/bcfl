@@ -1,0 +1,63 @@
+
+[01;1mBrainome Table Compiler v1.8-120-prod[0m
+Copyright (c) 2019-2022 Brainome, Inc. All Rights Reserved.
+Licensed to:                 Austin Jang  (Evaluation)
+Expiration Date:             2022-07-31   86 days left
+Maximum File Size:           30 GB
+Maximum Instances:           unlimited
+Maximum Attributes:          unlimited
+Maximum Classes:             unlimited
+Connected to:                daimensions.brainome.ai  (local execution)
+
+[01;1mCommand:[0m
+    btc data/cifar10_train6.csv -measureonly
+
+Start Time:                 05/06/2022, 23:22 PDT
+
+Cleaning...Splitting into training and validation...Pre-training measurements...
+
+[01;1mPre-training Measurements[0m
+Data:
+    Input:                      data/cifar10_train6.csv
+    Target Column:              3072
+    Number of instances:       5000
+    Number of attributes:      3073 out of 3073
+    Number of classes:           10
+
+Class Balance:                
+                               0: 9.58%
+                               6: 10.18%
+                               2: 10.50%
+                               7: 9.64%
+                               1: 9.58%
+                               4: 10.50%
+                               5: 10.40%
+                               3: 9.42%
+                               8: 10.40%
+                               9: 9.80%
+
+Learnability:
+    Best guess accuracy:          10.50%
+    Data Sufficiency:             Not enough data to generalize. [red]
+
+Capacity Progression:             at [ 5%, 10%, 20%, 40%, 80%, 100% ]
+    Ideal Machine Learner:              9,  10,  11,  12,  12,  13
+
+
+Expected Accuracy:              Training            Validation
+    Decision Tree:                99.36%                11.10%
+    Neural Network:                 ----                  ----
+    Random Forest:               100.00%                36.28%
+Recommendations:
+    We recommend using Random Forest -f RF.
+    If predictor accuracy is insufficient, try using the effort option -e with a value of 5 or more to increase training time. 
+
+Time to Build Estimates:
+    Decision Tree:                a few seconds
+
+
+
+
+End Time:           05/06/2022, 23:22 PDT
+Runtime Duration:   35s
+
