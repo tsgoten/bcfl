@@ -73,7 +73,7 @@ def load_data(num_clients, bag=True, seed=None):
     for i in range(num_clients):
         train_subset = SliceDataset(trainset, i * train_len, (i+1) * train_len)
         test_subset = SliceDataset(testset, i * test_len, (i+1) * test_len)
-        train_subset.to_csv("cifar10_train"+str(i)+".csv")
+        train_subset.to_csv("datasets/cifar10_train_{}.csv".format(i))
         trainloaders.append(DataLoader(train_subset, batch_size=32, shuffle=True))
         testloaders.append(DataLoader(test_subset, batch_size=32))
         num_examples.append({"trainset" : len(train_subset), "testset" : len(test_subset)})
