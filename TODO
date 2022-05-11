@@ -1,0 +1,12 @@
+How to do capacity-curve
+	vary fully connected layer size at the end 
+	Output both training/test accuracy
+
+Figure out how to put model into brainome
+	use brainome predictor to give us model
+	Then use model 
+	write about the model
+
+run brianome on subset
+
+run brainome on full data
