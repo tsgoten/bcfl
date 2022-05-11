@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/Federator.sol": {
-      "lastModificationDate": 1652170721271,
-      "contentHash": "5699db0aa23c28f64542fab8981e3e4d",
+      "lastModificationDate": 1652242902007,
+      "contentHash": "1b8703a170c1da1fa80b91b8053cffd2",
       "sourceName": "contracts/Federator.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -30,7 +30,7 @@
       },
       "imports": [
         "../node_modules/hardhat/console.sol",
-        "./math.sol"
+        "./ABDKMath.sol"
       ],
       "versionPragmas": [
         "0.8.13"
@@ -109,10 +109,10 @@
         "console"
       ]
     },
-    "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/math.sol": {
-      "lastModificationDate": 1652162656851,
+    "/home/azicon/Projects/decentralized-federated-learning/ethereum/contracts/ABDKMath.sol": {
+      "lastModificationDate": 1652240950777,
       "contentHash": "3e8f08958268d4381e6daeea5da42c07",
-      "sourceName": "contracts/math.sol",
+      "sourceName": "contracts/ABDKMath.sol",
       "solcConfig": {
         "version": "0.8.13",
         "settings": {

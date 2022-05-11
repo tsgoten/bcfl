@@ -1,7 +1,7 @@
 pragma solidity 0.8.13;
 
 import "../node_modules/hardhat/console.sol";
-import {ABDKMath64x64 as math} from "./math.sol";
+import {ABDKMath64x64 as math} from "./ABDKMath.sol";
 
 contract Federator {
     int128 public max_batch_size;
@@ -44,9 +44,10 @@ contract Federator {
     // updates existing federated learning model with new data
     function update(int128[] calldata new_model_parameters) public {
         if (batch_size == max_batch_size) {
-            global_model_parameters = running_model_parameters;
+            for (uint16 i = 0; i < running_model_parameters.length; i++) {
+                global_model_parameters[i] = running_model_parameters[i];
+            }
             batch_size = 1;
-            batch_number = batch_number + 1;
             //console.log("I am here");
         }
         for (uint128 i = 0; i < new_model_parameters.length; i++) {
@@ -60,6 +61,7 @@ contract Federator {
             //console.logInt(running_model_parameters[i]);
         }
         batch_size = batch_size + 1;
+        //console.logInt(batch_size);
     }
 
     function write_running_parameters(int128[] memory weights) private {
