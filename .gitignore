@@ -5,3 +5,4 @@ cifar-10-batches-py/
 models/
 datasets/
 *.pyc
+wandb/

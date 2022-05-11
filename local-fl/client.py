@@ -95,6 +95,21 @@ def train(net, trainloader, epochs):
             loss.backward()
             optimizer.step()
 
+def validate(net, trainloader):
+    """Validate the network on the entire train set."""
+    criterion = torch.nn.CrossEntropyLoss()
+    correct, total, loss = 0, 0, 0.0
+    with torch.no_grad():
+        for data in trainloader:
+            images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+            outputs = net(images)
+            loss += criterion(outputs, labels).item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    accuracy = correct / total
+    return loss, accuracy    
+
 def test(net, testloader):
     """Validate the network on the entire test set."""
     criterion = torch.nn.CrossEntropyLoss()
@@ -157,5 +172,9 @@ class CifarClient():
     def evaluate(self, parameters, config=[]):
         self.set_parameters(parameters)
         loss, accuracy = test(self.net, testloaders[self.client_id])
-        return float(loss), num_examples[self.client_id]["testset"], {"accuracy": float(accuracy)}
+        return float(loss), num_examples[self.client_id]["testset"], float(accuracy)
+
+    def train_valuate(self, parameters, config=[]):
+        loss, accuracy = validate(self.net, trainloaders[self.client_id])
+        return float(loss), num_examples[self.client_id]["trainset"], float(accuracy)
 
