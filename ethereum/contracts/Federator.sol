@@ -1,7 +1,47 @@
 pragma solidity 0.8.13;
 
 import "../node_modules/hardhat/console.sol";
-import {ABDKMath64x64 as math} from "./ABDKMath.sol";
+
+library math {
+    int128 private constant MIN_64x64 = -0x80000000000000000000000000000000;
+
+    int128 private constant MAX_64x64 = 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
+    function fromInt(int256 x) internal pure returns (int128) {
+        unchecked {
+            require(x >= -0x8000000000000000 && x <= 0x7FFFFFFFFFFFFFFF);
+            return int128(x << 64);
+        }
+    }
+
+    function mul(int128 x, int128 y) internal pure returns (int128) {
+        unchecked {
+            int256 result = (int256(x) * y) >> 64;
+            require(result >= MIN_64x64 && result <= MAX_64x64);
+            return int128(result);
+        }
+    }
+
+    function add(int128 x, int128 y) internal pure returns (int128) {
+        unchecked {
+            int256 result = int256(x) + y;
+            require(result >= MIN_64x64 && result <= MAX_64x64);
+            return int128(result);
+        }
+    }
+
+    function div(int128 x, int128 y) internal pure returns (int128) {
+        unchecked {
+            require(y != 0, "Division by zero");
+            int256 result = (int256(x) << 64) / y;
+            require(
+                result >= MIN_64x64 && result <= MAX_64x64,
+                "Division overflow"
+            );
+            return int128(result);
+        }
+    }
+}
 
 contract Federator {
     int128 public max_batch_size;
@@ -21,14 +61,14 @@ contract Federator {
         int128 max_batch_size_
     ) public {
         max_batch_size = max_batch_size_;
-        dimensions = new uint128[](model_structure.length);
+        // dimensions = new uint128[](model_structure.length);
 
-        uint128 model_length_total = 0;
-        for (uint16 i = 0; i < model_structure.length; i++) {
-            dimensions[i] = model_structure[i];
-            model_length_total += model_structure[i];
-        }
-        require(model_length_total == model_parameters.length);
+        // uint128 model_length_total = 0;
+        // for (uint16 i = 0; i < model_structure.length; i++) {
+        //     dimensions[i] = model_structure[i];
+        //     model_length_total += model_structure[i];
+        // }
+        // require(model_length_total == model_parameters.length);
 
         global_model_parameters = new int128[](model_parameters.length);
         running_model_parameters = new int128[](model_parameters.length);
@@ -54,7 +94,10 @@ contract Federator {
             running_model_parameters[i] = math.div(
                 math.add(
                     new_model_parameters[i],
-                    math.mul(running_model_parameters[i], math.fromInt(batch_size))
+                    math.mul(
+                        running_model_parameters[i],
+                        math.fromInt(batch_size)
+                    )
                 ),
                 math.fromInt(batch_size + 1)
             );

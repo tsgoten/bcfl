@@ -7,7 +7,7 @@ const {
 } = require("../utils");
 
 async function main() {
-  const model_structure = [6, 20, 40, 6];
+  const model_structure = [62006];
   const init_model_parameters = same_parameters_factory(model_structure, 1);
 
   const [deployer] = await ethers.getSigners();
@@ -16,17 +16,12 @@ async function main() {
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const Math = await ethers.getContractFactory("ABDKMath64x64");
-  const math = await Math.deploy();
-
   const Federator = await ethers.getContractFactory("Federator");
   const federator = await Federator.deploy(
     model_structure,
     init_model_parameters,
     10
   );
-
-  console.log("Math library address:", math.address);
   console.log("Federator address:", federator.address);
 }
 

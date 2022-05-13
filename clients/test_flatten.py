@@ -88,6 +88,7 @@ net = Net()
 print(net)
 out, indices = flatten_params(net.parameters())
 new_params = recover_flattened(out, indices, net)
+print(len(out))
 
 new_net = Net()
 new_net.set_parameters(new_params)
