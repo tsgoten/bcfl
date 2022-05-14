@@ -10,6 +10,8 @@ from torchvision.datasets import CIFAR10
 import pandas as pd
 import numpy as np
 
+import a
+
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 NUM_CLIENTS = 3
 class ShuffleDataset(torch.utils.data.Dataset):
@@ -90,6 +92,11 @@ def train(net, trainloader, epochs):
     for _ in range(epochs):
         for images, labels in trainloader:
             images, labels = images.to(DEVICE), labels.to(DEVICE)
+            # flatten images and call Brainome function
+            images = images.view(images.size(0), -1) 
+            print("images shape: ", images.shape)
+            images = [a.__transform(i) for i in images]
+            # images = a.__transform(images)
             optimizer.zero_grad()
             loss = criterion(net(images), labels)
             loss.backward()
@@ -102,6 +109,11 @@ def validate(net, trainloader):
     with torch.no_grad():
         for data in trainloader:
             images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+            # flatten images and call Brainome function
+            images = images.view(images.size(0), -1) 
+            # images = a.__transform(images)
+            images = [a.__transform(i) for i in images]
+            # images.apply(a.__transform)
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
@@ -117,6 +129,14 @@ def test(net, testloader):
     with torch.no_grad():
         for data in testloader:
             images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+            # flatten images and call Brainome function
+            images = images.view(images.size(0), -1) 
+            print("images shape: ", images.shape)
+            # images = a.__transform(images)
+            print(type(a.__transform(images[0])))
+            images = torch.cat(tuple(a.__transform(i) for i in images))
+            print("images shape after: ", images.shape)
+            # images.apply(a.__transform)
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
@@ -129,20 +149,12 @@ def test(net, testloader):
 class Net(nn.Module):
     def __init__(self) -> None:
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(3, 6, 5)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
+        self.fc1 = nn.Linear(85, 16)
+        self.fc2 = nn.Linear(16, 10)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = self.fc2(x)
         return x
 
 # Load model and data

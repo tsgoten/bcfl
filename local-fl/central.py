@@ -8,7 +8,7 @@ NUM_EPOCHS = 1000
 clients = []
 
 global_client = CifarClient(-1)
-wandb.init(project="bcfl", entity="tarang")
+# wandb.init(project="bcfl", entity="tarang")
 
 def initialize_clients(num_clients=3):
     for i in range(num_clients):
@@ -25,7 +25,7 @@ def evaluate_local_clients():
         metrics["Agent_{}/train_accuracy".format(client.client_id)] = train_acc
         metrics["Agent_{}/test_accuracy".format(client.client_id)] = test_acc
         print("Test Acc: {}, Train Acc: {}".format(test_acc, train_acc))
-    wandb.log(metrics)
+    # wandb.log(metrics)
 
 
 

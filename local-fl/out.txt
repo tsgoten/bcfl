@@ -1,0 +1,5 @@
+Files already downloaded and verified
+Files already downloaded and verified
+******** Epoch: 0
+Shapes of X torch.Size([3072]) Shapes of mean (3072,)
+Shapes of X torch.Size([3072]) Shapes of components.T (14,)
