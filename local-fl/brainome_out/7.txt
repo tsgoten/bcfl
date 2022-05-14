@@ -2,7 +2,7 @@
 [01;1mBrainome Table Compiler v1.8-120-prod[0m
 Copyright (c) 2019-2022 Brainome, Inc. All Rights Reserved.
 Licensed to:                 Austin Jang  (Evaluation)
-Expiration Date:             2022-07-31   86 days left
+Expiration Date:             2022-07-31   82 days left
 Maximum File Size:           30 GB
 Maximum Instances:           unlimited
 Maximum Attributes:          unlimited
@@ -10,9 +10,9 @@ Maximum Classes:             unlimited
 Connected to:                daimensions.brainome.ai  (local execution)
 
 [01;1mCommand:[0m
-    btc data/cifar10_train7.csv -measureonly
+    btc data/cifar10_train7.csv -vv -nosplit -y -f NN
 
-Start Time:                 05/06/2022, 23:22 PDT
+Start Time:                 05/10/2022, 20:21 PDT
 
 Cleaning...Splitting into training and validation...Pre-training measurements...
 
@@ -43,6 +43,18 @@ Learnability:
 Capacity Progression:             at [ 5%, 10%, 20%, 40%, 80%, 100% ]
     Ideal Machine Learner:              9,  10,  11,  12,  12,  13
 
+Estimated Memory Equivalent Capacity:
+    Decision Tree:              4393 bits
+    Neural Networks:           40102 bits
+    Random Forest:              1554 bits
+Percent of data that would be memorized:
+    Decision Tree:                98.34%
+    Neural Networks:             100.00%
+    Random Forest:                69.04%
+Expected Generalization:
+    Decision Tree:                 3.75 bits/bit
+    Neural Network:                0.41 bits/bit
+    Random Forest:                 3.22 bits/bit
 
 Expected Accuracy:              Training            Validation
     Decision Tree:                99.28%                11.42%
@@ -50,14 +62,74 @@ Expected Accuracy:              Training            Validation
     Random Forest:               100.00%                37.79%
 Recommendations:
     We recommend using Random Forest -f RF.
-    If predictor accuracy is insufficient, try using the effort option -e with a value of 5 or more to increase training time. 
-
-Time to Build Estimates:
-    Decision Tree:                a few seconds
+    If predictor accuracy is insufficient, try using the effort option -e with a value of 5 or more to increase training time.
+    Model type NN given by user. 
 
 
+Architecting model...Priming model...Model created:
+Sequential(
+  (0): Linear(in_features=31, out_features=13, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=13, out_features=10, bias=True)
+)
+
+Compiling predictor...Validating predictor...
+[01;1mPredictor:[0m                        a.py
+    Classifier Type:              Neural Network
+    System Type:                  10-way classifier
+    Training / Validation Split:    Unable to split dataset. The predictor was trained and evaluated on the same data.
+    Accuracy:
+      Best-guess accuracy:        10.48%
 
 
-End Time:           05/06/2022, 23:23 PDT
-Runtime Duration:   36s
+      Combined Model Accuracy:    42.50% (2125/5000 correct)
+
+
+    Model Capacity (MEC):        556    bits
+    Generalization Ratio:         12.69 bits/bit
+    Percent of Data Memorized:    29.09%
+    Resilience to Noise:          -0.58 dB
+
+
+
+
+
+
+    System Meter Runtime Duration:    2s
+    Combined Confusion Matrix:
+              Actual | Predicted
+              ------ | ---------
+                   5 |   249    66    39     8     7    46    51    12    15     8 
+                   6 |    50   294    14     6     8    18    67     8    27     3 
+                   7 |    33    35   224     9    27    23    72    17    51     8 
+                   1 |    18    14    22   263    70    13    12    49     5    18 
+                   9 |    10    20    35   125   192    16     6    61    18    10 
+                   3 |   152   108    36    29    13    76    44    12    20    15 
+                   2 |    37    87    46    15    10    16   183    21    63    38 
+                   8 |    12    10     8    42    30     9     9   328    16    40 
+                   4 |    33   119    51     3     7    20   105    14   106    21 
+                   0 |     9    15    18    35    31    15    45   123    23   210 
+
+
+
+    Combined Accuracy by Class:
+                3072 |    TP    FP    TN    FN     TPR      TNR      PPV      NPV       F1       TS 
+                ---- | ----- ----- ----- ----- -------- -------- -------- -------- -------- --------
+                   5 |   249   354  4145   252   49.70%   92.13%   41.29%   94.27%   45.11%   29.12%
+                   6 |   294   474  4031   201   59.39%   89.48%   38.28%   95.25%   46.56%   30.34%
+                   7 |   224   269  4232   275   44.89%   94.02%   45.44%   93.90%   45.16%   29.17%
+                   1 |   263   272  4244   221   54.34%   93.98%   49.16%   95.05%   51.62%   34.79%
+                   9 |   192   203  4304   301   38.95%   95.50%   48.61%   93.46%   43.24%   27.59%
+                   3 |    76   176  4319   429   15.05%   96.08%   30.16%   90.96%   20.08%   11.16%
+                   2 |   183   411  4073   333   35.47%   90.83%   30.81%   92.44%   32.97%   19.74%
+                   8 |   328   317  4179   176   65.08%   92.95%   50.85%   95.96%   57.09%   39.95%
+                   4 |   106   238  4283   373   22.13%   94.74%   30.81%   91.99%   25.76%   14.78%
+                   0 |   210   161  4315   314   40.08%   96.40%   56.60%   93.22%   46.93%   30.66%
+
+
+
+
+
+End Time:           05/10/2022, 20:25 PDT
+Runtime Duration:   3m 25s
 
