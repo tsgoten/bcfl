@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-NUM_CLIENTS = 10
+NUM_CLIENTS = 3
 class ShuffleDataset(torch.utils.data.Dataset):
     def __init__(self, dataset):
         super().__init__()
@@ -73,7 +73,7 @@ def load_data(num_clients, bag=True, seed=None):
     for i in range(num_clients):
         train_subset = SliceDataset(trainset, i * train_len, (i+1) * train_len)
         test_subset = SliceDataset(testset, i * test_len, (i+1) * test_len)
-        train_subset.to_csv("cifar10_train"+str(i)+".csv")
+        train_subset.to_csv("datasets/cifar10_train_{}.csv".format(i))
         trainloaders.append(DataLoader(train_subset, batch_size=32, shuffle=True))
         testloaders.append(DataLoader(test_subset, batch_size=32))
         num_examples.append({"trainset" : len(train_subset), "testset" : len(test_subset)})
@@ -94,6 +94,21 @@ def train(net, trainloader, epochs):
             loss = criterion(net(images), labels)
             loss.backward()
             optimizer.step()
+
+def validate(net, trainloader):
+    """Validate the network on the entire train set."""
+    criterion = torch.nn.CrossEntropyLoss()
+    correct, total, loss = 0, 0, 0.0
+    with torch.no_grad():
+        for data in trainloader:
+            images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+            outputs = net(images)
+            loss += criterion(outputs, labels).item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    accuracy = correct / total
+    return loss, accuracy    
 
 def test(net, testloader):
     """Validate the network on the entire test set."""
@@ -151,11 +166,15 @@ class CifarClient():
 
     def fit(self, parameters, config=[]):
         self.set_parameters(parameters)
-        train(self.net, trainloaders[self.client_id], epochs=10)
+        train(self.net, trainloaders[self.client_id], epochs=1)
         return self.get_parameters(), num_examples[self.client_id]["trainset"], {}
 
     def evaluate(self, parameters, config=[]):
         self.set_parameters(parameters)
         loss, accuracy = test(self.net, testloaders[self.client_id])
-        return float(loss), num_examples[self.client_id]["testset"], {"accuracy": float(accuracy)}
+        return float(loss), num_examples[self.client_id]["testset"], float(accuracy)
+
+    def train_valuate(self, parameters, config=[]):
+        loss, accuracy = validate(self.net, trainloaders[self.client_id])
+        return float(loss), num_examples[self.client_id]["trainset"], float(accuracy)
 
