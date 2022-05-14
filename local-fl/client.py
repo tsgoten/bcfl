@@ -92,11 +92,11 @@ def train(net, trainloader, epochs):
     for _ in range(epochs):
         for images, labels in trainloader:
             images, labels = images.to(DEVICE), labels.to(DEVICE)
+
             # flatten images and call Brainome function
             images = images.view(images.size(0), -1) 
-            print("images shape: ", images.shape)
-            images = [a.__transform(i) for i in images]
-            # images = a.__transform(images)
+            images = torch.stack(tuple(a.__transform(i).float() for i in images))
+
             optimizer.zero_grad()
             loss = criterion(net(images), labels)
             loss.backward()
@@ -109,11 +109,11 @@ def validate(net, trainloader):
     with torch.no_grad():
         for data in trainloader:
             images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+
             # flatten images and call Brainome function
             images = images.view(images.size(0), -1) 
-            # images = a.__transform(images)
-            images = [a.__transform(i) for i in images]
-            # images.apply(a.__transform)
+            images = torch.stack(tuple(a.__transform(i).float() for i in images))
+
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
@@ -129,14 +129,11 @@ def test(net, testloader):
     with torch.no_grad():
         for data in testloader:
             images, labels = data[0].to(DEVICE), data[1].to(DEVICE)
+
             # flatten images and call Brainome function
             images = images.view(images.size(0), -1) 
-            print("images shape: ", images.shape)
-            # images = a.__transform(images)
-            print(type(a.__transform(images[0])))
-            images = torch.cat(tuple(a.__transform(i) for i in images))
-            print("images shape after: ", images.shape)
-            # images.apply(a.__transform)
+            images = torch.stack(tuple(a.__transform(i).float() for i in images))
+
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
@@ -149,7 +146,7 @@ def test(net, testloader):
 class Net(nn.Module):
     def __init__(self) -> None:
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(85, 16)
+        self.fc1 = nn.Linear(14, 16)
         self.fc2 = nn.Linear(16, 10)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
